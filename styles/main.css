@@ -31,7 +31,10 @@ body {
     left: 2rem;
     cursor: pointer;  /* produces the finger-pointer icon when you hover over the logo */
 }
-
+.navbar-link:hover:active{
+  color: rgb(233,50,117);
+  background-color: white;
+}
 .navbar .links-container {
     display: table;
     position: absolute;
@@ -64,7 +67,7 @@ body {
   /* #5 */
 .links-container .navbar-link:hover {
     color: rgb(233,50,117);
-} 
+}
 
 .container {
     margin: 0 auto;
