@@ -90,6 +90,13 @@ var albumSubway = {
         }
         return currentParent;
     }
+    if(currentParent && (currentParent.className === targetClass)) {
+        return currentParent;
+        console.log('No Parent found with that Class Name');
+    }
+    else{
+        console.log('No Parent Element');
+    }
 };
 
   var getSongItem = function(element) {
