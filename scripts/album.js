@@ -147,6 +147,7 @@ var updateSeekBarWhileSongPlays = function() {
             var $seekBar = $('.seek-control .seek-bar');
 
             updateSeekPercentage($seekBar, seekBarFillRatio);
+            setCurrentTimeInPlayerBar(filterTimeCode(this.getTime()));
         });
     }
 };
@@ -209,6 +210,30 @@ var setupSeekBars = function() {
     });
 };
 
+var setCurrentTimeInPlayerBar = function(currentTime) {
+  $('.current-time').text(currentTime);
+};
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+  $('.total-time').text(totalTime);
+};
+
+var filterTimeCode = function(timeInSeconds) {
+  var seconds = parseFloat(timeInSeconds);
+  var wholeSeconds = Math.floor(seconds);
+  var wholeMinutes = Math.floor(seconds / 60);
+  var remainingSeconds =  (wholeSeconds % 60);
+
+  var time = wholeMinutes + ":" + remainingSeconds;
+
+  if(remainingSeconds < 10) {
+    time = wholeMinutes + ":" + 0 + remainingSeconds;
+  }
+
+  return time;
+
+};
+
 var trackIndex = function(album, song) {
     return album.songs.indexOf(song);
 };
@@ -256,8 +281,6 @@ var previousSong = function() {
    setSong(currentSongIndex + 1);
    currentSoundFile.play();
    updateSeekBarWhileSongPlays();
-
-
    //Update the Player Bar Information.
    updatePlayerBarSong();
 
@@ -276,13 +299,14 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
 
     $('.main-controls .play-pause').html(playerBarPauseButton);
+    setTotalTimeInPlayerBar(filterTimeCode(currentSongFromAlbum.duration));
 
 }
 
 
 var togglePlayFromPlayerBar = function() {
     var $currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
-    if(currentSoundFile && currentSoundFile.isPaused()) {
+    if(currentSoundFile.isPaused()) {
         //Update play/pause button in cell.
         $currentlyPlayingCell.html(pauseButtonTemplate);
         //Update play/pause button in player bar using $(this) - the clicked element.
@@ -301,8 +325,11 @@ var togglePlayFromPlayerBar = function() {
 
 // Album button templates
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
+
 var playerBarPlayButton = '<span class="ion-play"></span>';
+
 var playerBarPauseButton = '<span class="ion-pause"></span>';
 
 var currentAlbum = null;
@@ -320,8 +347,10 @@ $(document).ready(function() {
     setCurrentAlbum(albumPicasso);
     setupSeekBars();
     $previousButton.click(previousSong);
+
     $nextButton.click(nextSong);
-    $playPauseButton.click(togglePlayFromPlayerBar());
+
+    $playPauseButton.click(togglePlayFromPlayerBar);
 
     //});
     var albums = [albumPicasso, albumMarconi, albumSubway];
